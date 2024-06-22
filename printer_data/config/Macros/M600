@@ -1,0 +1,21 @@
+[gcode_macro M600]
+description: Cambio de filamento
+gcode:
+    {IF [current_temperature[tool0] >= 180] ; Verifica si el pico está a 180°C o más
+        G1 E-20 F300 ; Retrae 20 mm de filamento a velocidad moderada
+        G91 ; Cambia a modo de posicionamiento relativo
+        G1 Z10 F6000 ; Levanta el cabezal 10 mm
+        G90 ; Cambia de nuevo a modo de posicionamiento absoluto
+        G1 X0 Y200 F6000 ; Mueve la boquilla a una posición de cambio de filamento
+        PAUSE ; Pausa la impresión para realizar el cambio de filamento
+        G1 X0 Y0 F6000 ; Vuelve la boquilla a la posición de impresión
+        G1 Z-10 F6000 ; Baja el cabezal 10 mm
+        G90 ; Vuelve a modo de posicionamiento absoluto
+        G1 E25 F300 ; Extruye 25 mm de filamento a velocidad moderada
+        G92 E0 ; Reinicia la posición del extrusor
+    }
+    {ELSE}
+        M117 Esperando a que el pico se caliente... ; Mensaje en pantalla mientras espera
+        WAIT TOOL0_TARGET ; Espera hasta que el pico alcance la temperatura objetivo
+        CAMBIO_FILAMENTO ; Vuelve a intentar el cambio de filamento cuando esté caliente
+    {ENDIF}

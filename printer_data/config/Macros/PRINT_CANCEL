@@ -1,0 +1,12 @@
+[gcode_macro PRINT_CANCEL]
+description: Cancela la impresion
+gcode:
+    G91 ; Cambia a modo de posicionamiento relativo
+    G1 Z10 F6000 ; Levanta el cabezal 10 mm
+    G90 ; Cambia de nuevo a modo de posicionamiento absoluto
+    G1 X0 Y200 F6000 ; Mueve la boquilla a una posición segura
+    G1 E-50 F300 ; Retrae 50 mm de filamento a velocidad moderada
+    M104 S0 ; Apaga el pico
+    M140 S0 ; Apaga la cama caliente
+    M106 S0 ; Apaga el ventilador de la capa
+    M84 ; Apaga los motores
